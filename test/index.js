@@ -8,12 +8,12 @@ dotenv.load()
 
 global.log = bunyan.createLogger({name: pkg.name})
 
-log.info('Preparing to start...')
+log.info('Preparing to test...')
 Game.onReady = function() {
-  var server = new Server()
-  server.listen(server.get('port'), function() {
-    log.info('Started **%s** on port `%s` in *%s* mode.', pkg.name, server.get('port'), server.get('env'))
-  })
-}
 
+  // Begin testing
+
+  var game = new Game()
+
+}
 
