@@ -41,7 +41,7 @@ module.exports = function () {
   var io = sio(server)
 
   // Passing app variables over
-  server.get = function(name) {
+  server.get = function (name) {
     return app.get(name)
   }
   server.app = app

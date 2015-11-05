@@ -1,19 +1,21 @@
+/* globals describe, before */
+
+require('should')
 var pkg = require('package.json')
-var Server = require('server')
 var dotenv = require('dotenv')
 var Game = require('services/game')
 var bunyan = require('bunyan')
 
 dotenv.load()
 
-global.log = bunyan.createLogger({name: pkg.name})
+global.log = bunyan.createLogger({name: pkg.name + '.test'})
 
-log.info('Preparing to test...')
-Game.onReady = function() {
+describe('Server', function () {
+  before(function (next) {
+    Game.onReady = next
+  })
 
-  // Begin testing
-
-  var game = new Game()
-
-}
-
+  describe('Services', function () {
+    require('./services/game')
+  })
+})

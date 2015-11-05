@@ -1,4 +1,4 @@
-var ping = require('./ping');
+var ping = require('./ping')
 
 /**
  * Router Export
@@ -6,5 +6,5 @@ var ping = require('./ping');
  * @param  {Express} app Express application
  */
 module.exports = function (app) {
-  app.get('/ping', ping);
-};
+  app.get('/ping', ping)
+}
