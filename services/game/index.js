@@ -6,13 +6,16 @@ var HeadlessRenderer = require('services/game/renderers/headless')
 */
 var Game = module.exports = function (callback) {
   var Phaser = require('phaser/build/custom/phaser-arcade-physics')
-  this.game = new Phaser.Game(800, 600, Phaser.HEADLESS)
+  var game = new Phaser.Game(800, 600, Phaser.HEADLESS)
+
+  return game
 }
 
 jsdom.env('<html><body></body></html>', function (err, window) {
   if (err) {
     throw err
   }
+
   var canvas = require('canvas')
 
   // Fake out some Phaser required things

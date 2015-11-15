@@ -1,17 +1,17 @@
 /* globals describe, before, it */
 
-var Game = require('services/game')
 
 describe('Game', function () {
+  var Game
   var game
 
   before(function () {
+    Game = require('services/game')
     game = new Game()
-    console.log('now what?')
   })
 
   it('should be a game', function (next) {
-    game
+    // console.log(game)
     next()
   })
 })
