@@ -3,6 +3,7 @@ var States = function() {}
 // Default states
 States.boot = require('./boot')
 States.play = require('./play'),
+States.preload = require('./preload'),
 
 States.prototype.States = States  // So meta
 

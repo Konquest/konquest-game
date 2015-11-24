@@ -1,29 +1,19 @@
 <!doctype html>
-<html lang="">
+<html lang="en-us">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>konquest client</title>
+    <title>Konquest Game</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
 
-    <!-- build:css styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:css styles/main.css -->
+    <!-- build:css styles/app.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
   </head>
   <body>
-    <!--[if lt IE 10]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
     <div id="game"></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -37,12 +27,13 @@
     </script>
 
     <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="/node_modules/phaser/build/phaser.js"></script>
-    <!-- endbower -->
+    <script src="node_modules/phaser/dist/phaser.js"></script>
     <!-- endbuild -->
 
+    <!-- build:js scripts/game-engine.js -->
     <script src="scripts/game-engine.js"></script>
+    <!-- endbuild -->
+
     <!-- build:js scripts/main.js -->
     <script src="scripts/main.js"></script>
     <!-- endbuild -->

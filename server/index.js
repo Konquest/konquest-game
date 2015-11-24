@@ -9,6 +9,9 @@ var pkg = require('package.json')
 var http = require('http')
 var sio = require('socket.io')
 var PrepareGame = require('server/prepare-game')
+var path = require('path')
+
+var BASE_URL = path.dirname(__dirname)
 
 /**
   Initialize Express Application
@@ -41,27 +44,37 @@ module.exports = function () {
 
   // Socket.io
   var server = http.Server(app)
-  var io = sio(server)
+  app.io = sio(server)
 
   // Passing app variables over
   server.get = function (name) {
     return app.get(name)
   }
   server.app = app
-  server.io = io
 
-  app._listen = app._listen
-  app.listen = function () {
+  var listen = server.listen
+  var ready = function() {
+    var Phaser = require('phaser/dist/phaser.min')
+    var HeadlessRenderer = require('./renderers/headless')
+    var GameEngine = require('services/game-engine')
+
+    var game = new Phaser.Game(300, 400, Phaser.HEADLESS)
+
+    app.gameEngine = new GameEngine(game, path.join(BASE_URL, 'dist'))
+    app.gameEngine.start()
+    return listen.apply(server, arguments)
+  }
+
+  server.listen = function () {
     var args = arguments
 
-    this.game = require('services/game')
-
     if (PrepareGame.ready) {
-      return this._listen.apply(this, args)
+      return ready.apply(this, args)
     }
 
+    var self = this
     PrepareGame.onReady = function () {
-      this._listen.apply(this, args)
+      ready.apply(server, args)
     }
   }
 

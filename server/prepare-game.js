@@ -23,15 +23,18 @@ jsdom.env('<html><body></body></html>', function (err, window) {
   global.window.process = process
   global.navigator = {userAgent: 'node.js'}
   global.XMLHttpRequest = require('local-xmlhttprequest').XMLHttpRequest
+  global.p2 = require('p2')
 
   global.PIXI = require('ext/pixi')
   // global.PIXI = {}
 
-  var Phaser = require('phaser/build/custom/phaser-arcade-physics')
+  var Phaser = require('phaser/dist/phaser.min')
   Phaser.Game.prototype.setUpRenderer = function () {
     this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true)
     this.renderer = new HeadlessRenderer(this.width, this.height, {view: this.canvas})
   }
+  Phaser.Game.prototype.showDebugHeader = function () {}
+
   global.Phaser = Phaser
 
   Game.ready = true

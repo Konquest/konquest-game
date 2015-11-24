@@ -3,12 +3,13 @@
 
   This wraps a Phaser game.
 */
-var GameEngine = module.exports = function (game) {
+var GameEngine = module.exports = function (game, baseUrl) {
   // Cyclic dependencies
   this.game = game
   game.engine = this
+  game.baseUrl = baseUrl || ''
 
-  this.states = ['boot', 'play']
+  this.states = ['boot', 'preload', 'play']
 }
 
 GameEngine.Weapons = require('./weapons')

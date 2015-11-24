@@ -1,3 +1,5 @@
+var Weapons = require('../weapons')
+
 var Play = module.exports = function() {}
 
 Play.prototype.preload = function() {}
@@ -20,7 +22,7 @@ Play.prototype.onJoinPlayer = function(playerStateData) {
   player.nextFire = 0
 
   // TODO change weapon as necessary
-  player.weapon = new GameEngine.Weapons.Laser(this.game)
+  player.weapon = new Weapons.Laser(this.game)
 
   player.animations.add('left', [0, 1, 2, 3], 10, true)
   player.animations.add('turn', [4], 20, true)
@@ -75,16 +77,6 @@ Play.prototype.create = function() {
   this.players = []
   this.playerMap = {}
   this.game.localPlayerId = 123
-
-  this.bullets = this.game.add.group()
-  this.bullets.enableBody = true
-  this.bullets.physicsBodyType = Phaser.Physics.ARCADE
-  this.bullets.createMultiple(30, 'bullet')
-  this.bullets.setAll('anchor.x', 0.5)
-  this.bullets.setAll('anchor.y', 0.5)
-  this.bullets.setAll('allowGravity', false)
-  this.bullets.setAll('outOfBoundsKill', true)
-  this.bullets.setAll('checkWorldBounds', true)
 
   this.explosions = this.game.add.group()
   for(var i = 0; i < 30; i++) {

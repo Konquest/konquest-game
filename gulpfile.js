@@ -10,6 +10,7 @@ var reload = require('browser-sync').reload
 
 gulp.task('styles', () => {
   return gulp.src('app/styles/*.css')
+    .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.autoprefixer({browsers: ['last 1 version']}))
     .pipe($.sourcemaps.write())
@@ -17,48 +18,28 @@ gulp.task('styles', () => {
     .pipe(reload({stream: true}))
 })
 
-function lint (files, options) {
-  return () => {
-    return gulp.src(files)
-      .pipe(reload({stream: true, once: true}))
-      .pipe($.eslint(options))
-      .pipe($.eslint.format())
-      .pipe($.if(!browserSync.active, $.eslint.failAfterError()))
-  }
-}
-
-var testLintOptions = {
-  env: {
-    mocha: true
-  }
-}
-
-gulp.task('lint', lint('app/scripts/**/*.js'))
-gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions))
+gulp.task('game-engine', () => {
+  return browserify({entries: 'services/game-engine/index.js', standalone: 'GameEngine'})
+    .bundle()
+    .pipe($.plumber())
+    .pipe(source('game-engine.js'))
+    .pipe(gulp.dest('.tmp/scripts'))
+    .pipe(reload({stream: true}))
+})
 
 gulp.task('html', ['styles', 'game-engine'], () => {
-  var assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']})
-
   return gulp.src('app/*.html')
-    .pipe(assets)
+    .pipe($.plumber())
+    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
-    .pipe(assets.restore())
-    .pipe($.useref())
     .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('game-engine', () => {
-  browserify({entries: 'services/game-engine/index.js', standalone: 'GameEngine'})
-    .external('GameEngine')
-    .bundle()
-    .pipe(source('game-engine.js'))
-    .pipe(gulp.dest('.tmp/scripts'))
-})
-
 gulp.task('images', () => {
   return gulp.src('app/images/**/*')
+    .pipe($.plumber())
     .pipe($.if($.if.isFile, $.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -75,17 +56,26 @@ gulp.task('images', () => {
 
 gulp.task('fonts', () => {
   return gulp.src('app/fonts/**/*.{eot,svg,ttf,woff,woff2}')
+    .pipe($.plumber())
     .pipe(gulp.dest('.tmp/fonts'))
     .pipe(gulp.dest('dist/fonts'))
 })
 
 gulp.task('extras', () => {
-  return gulp.src([
+  var extras = [
     'app/*.*',
     '!app/*.html'
-  ], {
-    dot: true
-  }).pipe(gulp.dest('dist'))
+  ]
+
+  return gulp.src(extras, { dot: true })
+    .pipe($.plumber())
+    .pipe(gulp.dest('dist'))
+})
+
+gulp.task('maps', () => {
+  return gulp.src('app/maps/**/*')
+    .pipe($.plumber())
+    .pipe(gulp.dest('dist/maps'))
 })
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']))
@@ -139,11 +129,13 @@ gulp.task('serve:test', () => {
   })
 
   gulp.watch('test/spec/**/*.js').on('change', reload)
-  gulp.watch('test/spec/**/*.js', ['lint:test'])
+// gulp.watch('test/spec/**/*.js', ['lint:test'])
 })
 
-gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
-  return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}))
+gulp.task('build', ['html', 'images', 'fonts', 'extras', 'maps'], () => {
+  return gulp.src('dist/**/*')
+    .pipe($.plumber())
+    .pipe($.size({title: 'build', gzip: true}))
 })
 
 gulp.task('default', ['clean'], () => {
