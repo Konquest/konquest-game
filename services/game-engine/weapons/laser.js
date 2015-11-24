@@ -10,12 +10,16 @@ var Laser = module.exports = function (game) {
   this.fireRate = 500
 
   for (var i = 0; i < 32; i++) {
-    this.add(new BaseWeapon(game, 'bulletBlue'), true)
+    this.add(new BaseWeapon(game, 'bulletLaser'), true)
   }
 
   this.setAll('tracking', true)
 
   return this
+}
+
+Laser.Assets = {
+  bulletLaser: 'sprites/bullet-laser.png'
 }
 
 Laser.prototype = Object.create(Phaser.Group.prototype)

@@ -18,6 +18,11 @@ var Rocket = module.exports = function (game) {
   return this
 }
 
+Rocket.Assets = {
+  bulletRocket: 'sprites/bullet-rocket.png',
+  gunRocket: null
+}
+
 Rocket.prototype = Object.create(Phaser.Group.prototype)
 Rocket.prototype.constructor = Rocket
 

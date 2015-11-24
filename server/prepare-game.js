@@ -1,15 +1,12 @@
-var jsdom = require('jsdom')
-var HeadlessRenderer = require('services/game/renderers/headless')
-
 /**
-  Game instance. Make sure to initialize after `Game.ready` is true.
-*/
-var Game = module.exports = function (callback) {
-  var Phaser = require('phaser/build/custom/phaser-arcade-physics')
-  var game = new Phaser.Game(800, 600, Phaser.HEADLESS)
+  Prepare for the games.
 
-  return game
-}
+  This is a bunch of hacks to get Phaser working as a backend.
+*/
+var jsdom = require('jsdom')
+var HeadlessRenderer = require('./renderers/headless')
+
+var Game = module.exports = {}
 
 jsdom.env('<html><body></body></html>', function (err, window) {
   if (err) {
@@ -35,8 +32,8 @@ jsdom.env('<html><body></body></html>', function (err, window) {
     this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true)
     this.renderer = new HeadlessRenderer(this.width, this.height, {view: this.canvas})
   }
+  global.Phaser = Phaser
 
   Game.ready = true
-
   Game.onReady && Game.onReady()
 })

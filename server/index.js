@@ -8,11 +8,13 @@ var cors = require('cors')
 var pkg = require('package.json')
 var http = require('http')
 var sio = require('socket.io')
+var PrepareGame = require('server/prepare-game')
+
 /**
- * Initialize Express Application
- *
- * @return {Express}
- */
+  Initialize Express Application
+
+  @return {Express}
+*/
 module.exports = function () {
   var app = express()
 
@@ -29,6 +31,7 @@ module.exports = function () {
   app.use(cors())
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({extended: true}))
+  app.use(express.static('dist'))
 
   // Routing
   route(app)
@@ -46,6 +49,21 @@ module.exports = function () {
   }
   server.app = app
   server.io = io
+
+  app._listen = app._listen
+  app.listen = function () {
+    var args = arguments
+
+    this.game = require('services/game')
+
+    if (PrepareGame.ready) {
+      return this._listen.apply(this, args)
+    }
+
+    PrepareGame.onReady = function () {
+      this._listen.apply(this, args)
+    }
+  }
 
   return server
 }
