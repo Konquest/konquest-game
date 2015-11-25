@@ -7,7 +7,7 @@ var Laser = module.exports = function (game) {
 
   this.nextFire = 0
   this.bulletSpeed = 400
-  this.fireRate = 500
+  this.fireRate = 200
 
   for (var i = 0; i < 32; i++) {
     this.add(new BaseWeapon(game, 'bulletLaser'), true)

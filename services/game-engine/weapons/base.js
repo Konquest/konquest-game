@@ -11,7 +11,7 @@ var BaseWeapon = module.exports = function (game, key) {
   this.tracking = false
   this.scaleSpeed = 0
 
-  this.debug = true // Un-comment this to see the collision box
+  // this.debug = true // Un-comment this to see the collision box
 }
 
 BaseWeapon.prototype = Object.create(Phaser.Sprite.prototype)

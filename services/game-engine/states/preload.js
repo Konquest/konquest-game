@@ -18,7 +18,7 @@ Preload.prototype.preload = function () {
   this.load.tilemap('level1', this.game.baseUrl + '/maps/level1.json', null, Phaser.Tilemap.TILED_JSON)
 
   this.load.image('tiles-1', this.game.baseUrl + '/images/tiles/tiles-1.png')
-  this.load.spritesheet('dude', this.game.baseUrl + '/images/sprites/dude.png', 32, 48)
+  this.load.spritesheet('phaserDude', this.game.baseUrl + '/images/sprites/dude.png', 32, 48)
   this.load.spritesheet('droid', this.game.baseUrl + '/images/sprites/droid.png', 32, 32)
   this.load.image('starSmall', this.game.baseUrl + '/images/sprites/star.png')
   this.load.image('starBig', this.game.baseUrl + '/images/sprites/star2.png')

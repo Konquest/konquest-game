@@ -3,7 +3,7 @@
 var BaseWeapon = require('./base')
 
 var Rocket = module.exports = function (game) {
-  Phaser.Group.call(this, game, game.world, 'Rocket', false, true, Phaser.Physics.ARCADE)
+  Phaser.Group.call(this, game, game.world, 'RocketLauncher', false, true, Phaser.Physics.ARCADE)
 
   this.nextFire = 0
   this.bulletSpeed = 400

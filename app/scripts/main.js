@@ -19,6 +19,9 @@
       this.load.setPreloadSprite(this.asset)
     }
 
+    // TODO input
+    // TODO camera
+    // TODO sockets
     engine.start()
   }
 
