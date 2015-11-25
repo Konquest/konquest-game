@@ -3,9 +3,10 @@
 
   This wraps a Phaser game.
 */
-var GameEngine = module.exports = function (game, baseUrl) {
+var GameEngine = module.exports = function (game, network, baseUrl) {
   // Cyclic dependencies
   this.game = game
+  game.network = network
   game.engine = this
   game.baseUrl = baseUrl || ''
 
@@ -21,5 +22,6 @@ GameEngine.prototype.start = function () {
   this.states.forEach(function (state) {
     self.game.state.add(state, new GameEngine.States.States[state])
   })
+  // this.game.network.initialize()
   this.game.state.start('boot')
 }

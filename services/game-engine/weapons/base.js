@@ -9,9 +9,10 @@ var BaseWeapon = module.exports = function (game, key) {
   this.exists = false
 
   this.tracking = false
-  this.scaleSpeed = 0
+  this.accelerationRate = 0
+  // this.scaleSpeed = 0
 
-  // this.debug = true // Un-comment this to see the collision box
+// this.debug = true // Un-comment this to see the collision box
 }
 
 BaseWeapon.prototype = Object.create(Phaser.Sprite.prototype)
@@ -22,12 +23,14 @@ BaseWeapon.prototype.fire = function (x, y, rotation, speed, gx, gy) {
   gy = gy || 0
 
   this.reset(x, y)
-  this.scale.set(1)
+  this.rotation = rotation
 
-  var angle = rotation * (180 / Math.PI)  // Convert to degrees
+  var angle = rotation * (180 / Math.PI) // Convert to degrees
   this.game.physics.arcade.velocityFromAngle(angle, speed, this.body.velocity)
 
-  this.angle = angle
+  if (this.accelerationRate > 0) {
+    this.game.physics.arcade.accelerationFromRotation(rotation, this.accelerationRate, this.body.acceleration)
+  }
 
   this.body.gravity.set(gx, gy)
 }
@@ -35,10 +38,5 @@ BaseWeapon.prototype.fire = function (x, y, rotation, speed, gx, gy) {
 BaseWeapon.prototype.update = function () {
   if (this.tracking) {
     this.rotation = Math.atan2(this.body.velocity.y, this.body.velocity.x)
-  }
-
-  if (this.scaleSpeed > 0) {
-    this.scale.x += this.scaleSpeed
-    this.scale.y += this.scaleSpeed
   }
 }

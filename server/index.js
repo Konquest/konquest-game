@@ -1,3 +1,5 @@
+/* globals Phaser */
+
 var errorHandler = require('server/middleware/error-handler')
 var compression = require('compression')
 var bodyParser = require('body-parser')
@@ -54,8 +56,6 @@ module.exports = function () {
 
   var listen = server.listen
   var ready = function() {
-    var Phaser = require('phaser/dist/phaser.min')
-    var HeadlessRenderer = require('./renderers/headless')
     var GameEngine = require('services/game-engine')
 
     var game = new Phaser.Game(300, 400, Phaser.HEADLESS)

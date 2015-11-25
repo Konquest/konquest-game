@@ -4,7 +4,7 @@
   This is a bunch of hacks to get Phaser working as a backend.
 */
 var jsdom = require('jsdom')
-var HeadlessRenderer = require('./renderers/headless')
+var HeadlessRenderer = require('./game/renderers/headless')
 
 var Game = module.exports = {}
 
