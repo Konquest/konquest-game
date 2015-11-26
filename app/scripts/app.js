@@ -1,11 +1,16 @@
-(function() {
+/* globals GameEngine, GameNetwork */
 
-  Phaser.Game.prototype.showDebugHeader = function () {}
-  window.onload = function () {
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game')
+(function () {
+  var GameApp = window.GameApp = function () {
+    this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game')
+    this.engine = new GameEngine(this.game)
+    this.network = new GameNetwork(this.game)
+    // TODO networking
 
-    var engine = new GameEngine(game)
+    this._initialize()
+  }
 
+  GameApp.prototype._initialize = function () {
     var bootState = GameEngine.States.get('boot')
     bootState.prototype.preload = function () {
       this.load.image('preloader', 'images/preloader.gif')
@@ -20,28 +25,28 @@
     }
 
     var playState = GameEngine.States.get('play')
-    playState.prototype.onPlayerJoin = function(player) {
+    playState.prototype.onPlayerJoin = function (player) {
       if (player.id === this.game.localPlayerId) {
         this.game.camera.follow(this.playerMap[this.game.localPlayerId].sprite)
       }
     }
 
-    playState.prototype.onGameCreate = function() {
+    playState.prototype.onGameCreate = function () {
       this.game.localPlayerId = 123
 
-      this.W = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-      this.A = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-      this.S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-      this.D = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-      this.spaceButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+      this.W = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
+      this.A = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
+      this.S = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
+      this.D = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+      this.spaceButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
 
-      setTimeout(function() {
+      setTimeout(function () {
         // Mock player join
         this._onPlayerJoin({
           id: 123
         })
 
-        setInterval(function() {
+        setInterval(function () {
           if (!this.playerMap[this.game.localPlayerId]) {
             return
           }
@@ -57,15 +62,13 @@
               angle: this.game.physics.arcade.angleToXY(this.playerMap[this.game.localPlayerId].sprite, this.game.input.activePointer.worldX, this.game.input.activePointer.worldY)
             }
           }
-          this._onPlayerUpdate(state);
-        }.bind(this), 100);
-      }.bind(this), 50);
+          this._onPlayerUpdate(state)
+        }.bind(this), 100)
+      }.bind(this), 50)
     }
-
-    // TODO input
-    // TODO camera
-    // TODO sockets
-    engine.start()
   }
 
+  GameApp.prototype.start = function () {
+    this.engine.start()
+  }
 })()

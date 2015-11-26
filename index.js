@@ -7,7 +7,7 @@ dotenv.load()
 
 global.log = winston.loggers.add(pkg.name, {
   console: {
-    colorize: 'true',
+    colorize: 'true'
   }
 })
 
