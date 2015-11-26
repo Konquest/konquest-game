@@ -1,17 +1,8 @@
-/* globals Phaser */
-
-var errorHandler = require('server/middleware/error-handler')
-var compression = require('compression')
-var bodyParser = require('body-parser')
-var express = require('express')
-var route = require('server/routes')
-var helmet = require('helmet')
-var cors = require('cors')
-var pkg = require('package.json')
-var http = require('http')
-var sio = require('socket.io')
-var PrepareGame = require('server/prepare-game')
+var prepareGame = require('./game/prepare')
 var path = require('path')
+
+var http = require('./services/http')
+var sio = require('./services/socket.io')
 
 var BASE_URL = path.dirname(__dirname)
 
@@ -21,42 +12,13 @@ var BASE_URL = path.dirname(__dirname)
   @return {Express}
 */
 module.exports = function () {
-  var app = express()
+  var app = http()
+  var server = sio(app)
 
-  app.set('name', pkg.name)
-  app.set('version', pkg.version)
-  app.set('state', 'running')
-  app.set('port', process.env.PORT)
-  app.disable('x-powered-by')
-
-  // Middleware
-  app.use(compression())
-  app.use(helmet.xframe())
-  app.use(helmet.nosniff())
-  app.use(cors())
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({extended: true}))
-  app.use(express.static('dist'))
-
-  // Routing
-  route(app)
-
-  // Error handler
-  app.use(errorHandler)
-
-  // Socket.io
-  var server = http.Server(app)
-  app.io = sio(server)
-
-  // Passing app variables over
-  server.get = function (name) {
-    return app.get(name)
-  }
-  server.app = app
-
+  // Ensure game services are up
   var listen = server.listen
-  var ready = function() {
-    var GameEngine = require('services/game-engine')
+  var ready = function () {
+    var GameEngine = require('lib/game-engine')
 
     var game = new Phaser.Game(300, 400, Phaser.HEADLESS)
 
@@ -68,12 +30,11 @@ module.exports = function () {
   server.listen = function () {
     var args = arguments
 
-    if (PrepareGame.ready) {
+    if (prepareGame.ready) {
       return ready.apply(this, args)
     }
 
-    var self = this
-    PrepareGame.onReady = function () {
+    prepareGame.onReady = function () {
       ready.apply(server, args)
     }
   }

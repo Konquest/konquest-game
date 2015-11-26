@@ -4,7 +4,7 @@
   This is a bunch of hacks to get Phaser working as a backend.
 */
 var jsdom = require('jsdom')
-var HeadlessRenderer = require('./game/renderers/headless')
+var HeadlessRenderer = require('./renderers/headless')
 
 var Game = module.exports = {}
 
@@ -25,17 +25,15 @@ jsdom.env('<html><body></body></html>', function (err, window) {
   global.XMLHttpRequest = require('local-xmlhttprequest').XMLHttpRequest
   global.p2 = require('p2')
 
-  global.PIXI = require('ext/pixi')
+  global.PIXI = require('lib/pixi')
   // global.PIXI = {}
+  global.Phaser = require('phaser/dist/phaser.min')
 
-  var Phaser = require('phaser/dist/phaser.min')
   Phaser.Game.prototype.setUpRenderer = function () {
     this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true)
     this.renderer = new HeadlessRenderer(this.width, this.height, {view: this.canvas})
   }
   Phaser.Game.prototype.showDebugHeader = function () {}
-
-  global.Phaser = Phaser
 
   Game.ready = true
   Game.onReady && Game.onReady()

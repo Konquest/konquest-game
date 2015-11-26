@@ -9,13 +9,15 @@ dotenv.load()
 
 global.log = bunyan.createLogger({name: pkg.name + '.test'})
 
-describe('Server', function () {
+describe('Library', function () {
   before(function (next) {
-    var Game = require('services/game')
-    Game.onReady = next
+    var GameEngine = require('lib/game-engine')
+    GameEngine.onReady = next
   })
 
-  describe('Services', function () {
-    require('./services/game')
-  })
+  require('./lib/game')
 })
+
+// describe('Server', function () {
+
+// })

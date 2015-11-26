@@ -1,4 +1,4 @@
-These external files are produced manually.
+These files are produced manually.
 
 pixi.js
 ---------

@@ -19,7 +19,7 @@ gulp.task('styles', () => {
 })
 
 gulp.task('game-engine', () => {
-  return browserify({entries: 'services/game-engine/index.js', standalone: 'GameEngine'})
+  return browserify({entries: 'lib/game-engine/index.js', standalone: 'GameEngine'})
     .bundle()
     .pipe($.plumber())
     .pipe(source('game-engine.js'))
@@ -80,15 +80,14 @@ gulp.task('maps', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']))
 
-gulp.task('serve', ['styles', 'fonts', 'game-engine'], () => {
+gulp.task('watch:frontend', () => {
   browserSync({
     notify: false,
+    open: false,
     port: 9000,
-    server: {
-      baseDir: ['.tmp', 'app'],
-      routes: {
-        '/node_modules': 'node_modules'
-      }
+    proxy: {
+      target: 'localhost:9100',
+      ws: true
     }
   })
 
@@ -102,7 +101,25 @@ gulp.task('serve', ['styles', 'fonts', 'game-engine'], () => {
 
   gulp.watch('app/styles/**/*.css', ['styles'])
   gulp.watch('app/fonts/**/*', ['fonts'])
-  gulp.watch('services/game-engine/**/*', ['game-engine'])
+  gulp.watch('lib/game-engine/**/*', ['game-engine'])
+})
+
+gulp.task('watch:backend', () => {
+  return $.nodemon({
+    script: 'index.js',
+    watch: [
+      'server',
+      'lib',
+      'index.js'
+    ]
+  })
+  .once('exit', function () {
+    process.exit()
+  })
+})
+
+gulp.task('serve', ['styles', 'fonts', 'game-engine'], () => {
+  gulp.start(['watch:frontend', 'watch:backend'])
 })
 
 gulp.task('serve:dist', () => {
