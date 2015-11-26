@@ -15,7 +15,7 @@ module.exports = function () {
   var app = http()
   var server = sio(app)
 
-  // Ensure game services are up
+   // Ensure game services are up
   var listen = server.listen
   var ready = function () {
     var GameEngine = require('lib/game-engine')
@@ -24,6 +24,7 @@ module.exports = function () {
 
     app.gameEngine = new GameEngine(game, path.join(BASE_URL, 'dist'))
     app.gameEngine.start()
+
     return listen.apply(server, arguments)
   }
 

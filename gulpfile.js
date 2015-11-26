@@ -47,10 +47,10 @@ gulp.task('images', () => {
       // as hooks for embedding and styling
       svgoPlugins: [{cleanupIDs: false}]
     }))
-      .on('error', function (err) {
-        console.log(err)
-        this.end()
-      })))
+    .on('error', function (err) {
+      console.log(err)
+      this.end()
+    })))
     .pipe(gulp.dest('dist/images'))
 })
 
@@ -113,7 +113,7 @@ gulp.task('watch:backend', () => {
       'index.js'
     ]
   })
-  .once('exit', function () {
+  .once('quit', function () {
     process.exit()
   })
 })

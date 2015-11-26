@@ -44,13 +44,6 @@
       this.D = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
       this.spaceButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
 
-      // setTimeout(function () {
-      //   // Mock player join
-      //   this._onPlayerJoin({
-      //     id: 123
-      //   })
-      // }.bind(this), 50)
-
       setInterval(function () {
         if (!this.playerMap[this.game.localPlayerId]) {
           return
@@ -68,6 +61,7 @@
           }
         }
         this.game.onPlayerUpdate.dispatch(state)
+        this.game.updatePlayer.dispatch(state)  // For server to update
       }.bind(this), 100)
     }
   }
