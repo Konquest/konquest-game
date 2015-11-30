@@ -8,14 +8,13 @@ RUN apt-get update \
     libpango1.0-dev \
   && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/src/game
-COPY . /usr/src/game
+ADD . /usr/src/game
+WORKDIR /usr/src/game
 
 RUN npm install \
   && npm run build \
   && rm -rf node_modules \
   && npm install --production
 
-WORKDIR /usr/src/game
 
 CMD [ "npm", "run", "production" ]
