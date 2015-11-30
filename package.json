@@ -9,7 +9,10 @@
   "scripts": {
     "test": "NODE_PATH=`pwd` mocha | bunyan -l FATAL",
     "prestart": "standard -v",
-    "start": "NODE_PATH=`pwd` gulp serve"
+    "start": "NODE_PATH=`pwd` gulp serve",
+    "build": "gulp build",
+    "prod": "npm run production",
+    "production": "NODE_PATH=`pwd` NODE_ENV=production node index"
   },
   "repository": {
     "type": "git",

@@ -9,16 +9,13 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/game
-COPY package.json /usr/src/game
+COPY . /usr/src/game
+
+RUN npm install \
+  && npm run build \
+  && rm -rf node_modules \
+  && npm install --production
+
 WORKDIR /usr/src/game
 
-COPY ext /usr/src/game/ext
-COPY server /usr/src/game/server
-COPY services /usr/src/game/services
-COPY shared /usr/src/game/shared
-COPY test /usr/src/game/test
-COPY index.js /usr/src/game
-
-# RUN npm install --production
-
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "production" ]

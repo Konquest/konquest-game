@@ -71,4 +71,4 @@
   GameNetwork.prototype._updatePlayer = function (state) {
     this.io.emit('player-update', state)
   }
-})()
+})();

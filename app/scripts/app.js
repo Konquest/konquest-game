@@ -69,4 +69,4 @@
   GameApp.prototype.start = function () {
     this.engine.start()
   }
-})()
+})();
