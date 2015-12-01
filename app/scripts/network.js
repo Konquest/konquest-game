@@ -38,16 +38,16 @@
 
     this.engine.on(GameEngine.events.GAME_CREATE, this.onStart.bind(this))
     this.engine.on(GameEngine.events.PLAYER_UPDATE, this.onUpdatePlayer.bind(this))
-  }
-
-  GameNetwork.prototype.onStart = function () {
-    console.log('game start!', this.prestartPlayers.length, 'prestart players')
-    this.gameStarted = true
 
     this.io.on(GameEngine.events.PLAYER_JOIN, this.onPlayerJoin.bind(this))
     this.io.on(GameEngine.events.PLAYER_LEAVE, this.onPlayerLeave.bind(this))
     this.io.on(GameEngine.events.PLAYER_SYNC, this.onPlayerSync.bind(this))
     this.io.on(GameEngine.events.GAME_SYNC, this.onGameSync.bind(this))
+  }
+
+  GameNetwork.prototype.onStart = function () {
+    console.log('game start!', this.prestartPlayers.length, 'prestart players')
+    this.gameStarted = true
 
     // Handle missed players
     for (var i = 0; i < this.prestartPlayers.length; i++) {

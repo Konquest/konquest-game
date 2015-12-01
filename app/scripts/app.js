@@ -34,37 +34,42 @@
       this.load.setPreloadSprite(this.asset)
     }
 
-    this.engine.on(GameEngine.events.PLAYER_JOIN, function () {
-      app.game.camera.follow(app.game.state.states.play.playerMap[app.game.localPlayerId].sprite)
-    })
-    this.engine.on(GameEngine.events.GAME_CREATE, function () {
+    this.engine.on(GameEngine.events.GAME_PRELOAD, function () {
       var playState = app.game.state.states.play
 
-      playState.W = app.game.input.keyboard.addKey(Phaser.Keyboard.W)
-      playState.A = app.game.input.keyboard.addKey(Phaser.Keyboard.A)
-      playState.S = app.game.input.keyboard.addKey(Phaser.Keyboard.S)
-      playState.D = app.game.input.keyboard.addKey(Phaser.Keyboard.D)
-      playState.spaceButton = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+      app.engine.on(GameEngine.events.PLAYER_JOIN, function (playerState) {
+        if (playerState.id === app.game.localPlayerId) {
+          app.game.camera.follow(playState.playerMap[app.game.localPlayerId].sprite)
+        }
+      })
 
-      setInterval(function () {
-        if (!playState.playerMap[app.game.localPlayerId]) {
-          return
-        }
-        var state = {
-          id: app.game.localPlayerId,
-          controls: {
-            left: playState.A.isDown,
-            right: playState.D.isDown,
-            jump: playState.W.isDown,
-            jetpack: playState.spaceButton.isDown,
-            primary: app.game.input.activePointer.leftButton.isDown,
-            secondary: app.game.input.activePointer.rightButton.isDown,
-            angle: app.game.physics.arcade.angleToXY(playState.playerMap[app.game.localPlayerId].sprite, app.game.input.activePointer.worldX, app.game.input.activePointer.worldY)
+      app.engine.on(GameEngine.events.GAME_CREATE, function () {
+        playState.W = app.game.input.keyboard.addKey(Phaser.Keyboard.W)
+        playState.A = app.game.input.keyboard.addKey(Phaser.Keyboard.A)
+        playState.S = app.game.input.keyboard.addKey(Phaser.Keyboard.S)
+        playState.D = app.game.input.keyboard.addKey(Phaser.Keyboard.D)
+        playState.spaceButton = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+
+        setInterval(function () {
+          if (!playState.playerMap[app.game.localPlayerId]) {
+            return
           }
-        }
-        app.engine.emit(GameEngine.events.PLAYER_SYNC, [state])
-        app.engine.emit(GameEngine.events.PLAYER_UPDATE, state)
-      }, 100)
+          var state = {
+            id: app.game.localPlayerId,
+            controls: {
+              left: playState.A.isDown,
+              right: playState.D.isDown,
+              jump: playState.W.isDown,
+              jetpack: playState.spaceButton.isDown,
+              primary: app.game.input.activePointer.leftButton.isDown,
+              secondary: app.game.input.activePointer.rightButton.isDown,
+              angle: app.game.physics.arcade.angleToXY(playState.playerMap[app.game.localPlayerId].sprite, app.game.input.activePointer.worldX, app.game.input.activePointer.worldY)
+            }
+          }
+          app.engine.emit(GameEngine.events.PLAYER_SYNC, [state])
+          app.engine.emit(GameEngine.events.PLAYER_UPDATE, state)
+        }, 100)
+      })
     })
   }
 

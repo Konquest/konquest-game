@@ -23,7 +23,7 @@ module.exports = function (app) {
 
   // Setup event listeners
   server.io.on('connection', function (socket) {
-    console.log('Socket connected', socket.id)
+    log.info('Socket connected', socket.id)
     app.gameEngine.emit(events.NETWORK_CONNECT, socket.id)
 
     // TODO more player details
@@ -32,8 +32,6 @@ module.exports = function (app) {
     }
 
     app.gameEngine.emit(events.PLAYER_JOIN, player)
-
-    socket.emit('waah', 'rawr!')  // Why doesn't this get emited?
 
     // Inform all players
     server.io.emit(events.PLAYER_JOIN, player)
@@ -49,7 +47,7 @@ module.exports = function (app) {
     socket.on('disconnect', function () {
       app.gameEngine.emit(events.NETWORK_DISCONNECT, socket.id)
       app.gameEngine.emit(events.PLAYER_LEAVE, socket.id)
-      console.log('Socket closed!', socket.id)
+      log.info('Socket closed!', socket.id)
     })
 
     // // Update play state

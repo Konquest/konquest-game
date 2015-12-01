@@ -5,6 +5,7 @@ var winston = require('winston')
 
 dotenv.load()
 
+winston.level = process.env.LOG_LEVEL
 global.log = winston.loggers.add(pkg.name, {
   console: {
     colorize: 'true'
