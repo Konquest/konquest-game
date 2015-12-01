@@ -4,13 +4,22 @@
   var GameApp = window.GameApp = function () {
     this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game')
     this.engine = new GameEngine(this.game)
-    this.network = new GameNetwork(this.game)
+    this.network = new GameNetwork(this.game, this.engine)
 
     this._initialize()
+
+    this.engine.on(undefined, function () {
+      console.error(new Error('undefined event triggered'))
+    })
   }
 
   GameApp.prototype._initialize = function () {
     var app = this
+
+    this.engine.on(GameEngine.events.NETWORK_CONNECT, function (id) {
+      app.game.localPlayerId = id
+      console.log('local player id', app.game.localPlayerId)
+    })
 
     var bootState = GameEngine.States.get('boot')
     bootState.prototype.preload = function () {
@@ -25,48 +34,41 @@
       this.load.setPreloadSprite(this.asset)
     }
 
-    var playState = GameEngine.States.get('play')
-    playState.prototype.onPlayerJoin = function (player) {
-      console.log('player joined', player)
-      if (player.id === this.game.localPlayerId) {
-        console.log('follow this player!')
-        this.game.camera.follow(this.playerMap[this.game.localPlayerId].sprite)
-      }
-    }
+    this.engine.on(GameEngine.events.PLAYER_JOIN, function () {
+      app.game.camera.follow(app.game.state.states.play.playerMap[app.game.localPlayerId].sprite)
+    })
+    this.engine.on(GameEngine.events.GAME_CREATE, function () {
+      var playState = app.game.state.states.play
 
-    playState.prototype.onGameCreate = function () {
-      this.game.localPlayerId = app.network.id
-      console.log('local player id', app.network.id)
-
-      this.W = this.game.input.keyboard.addKey(Phaser.Keyboard.W)
-      this.A = this.game.input.keyboard.addKey(Phaser.Keyboard.A)
-      this.S = this.game.input.keyboard.addKey(Phaser.Keyboard.S)
-      this.D = this.game.input.keyboard.addKey(Phaser.Keyboard.D)
-      this.spaceButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+      playState.W = app.game.input.keyboard.addKey(Phaser.Keyboard.W)
+      playState.A = app.game.input.keyboard.addKey(Phaser.Keyboard.A)
+      playState.S = app.game.input.keyboard.addKey(Phaser.Keyboard.S)
+      playState.D = app.game.input.keyboard.addKey(Phaser.Keyboard.D)
+      playState.spaceButton = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
 
       setInterval(function () {
-        if (!this.playerMap[this.game.localPlayerId]) {
+        if (!playState.playerMap[app.game.localPlayerId]) {
           return
         }
         var state = {
-          id: this.game.localPlayerId,
+          id: app.game.localPlayerId,
           controls: {
-            left: this.A.isDown,
-            right: this.D.isDown,
-            jump: this.W.isDown,
-            jetpack: this.spaceButton.isDown,
-            primary: this.game.input.activePointer.leftButton.isDown,
-            secondary: this.game.input.activePointer.rightButton.isDown,
-            angle: this.game.physics.arcade.angleToXY(this.playerMap[this.game.localPlayerId].sprite, this.game.input.activePointer.worldX, this.game.input.activePointer.worldY)
+            left: playState.A.isDown,
+            right: playState.D.isDown,
+            jump: playState.W.isDown,
+            jetpack: playState.spaceButton.isDown,
+            primary: app.game.input.activePointer.leftButton.isDown,
+            secondary: app.game.input.activePointer.rightButton.isDown,
+            angle: app.game.physics.arcade.angleToXY(playState.playerMap[app.game.localPlayerId].sprite, app.game.input.activePointer.worldX, app.game.input.activePointer.worldY)
           }
         }
-        this.game.onPlayerUpdate.dispatch(state)
-        this.game.updatePlayer.dispatch(state)  // For server to update
-      }.bind(this), 100)
-    }
+        app.engine.emit(GameEngine.events.PLAYER_SYNC, [state])
+        app.engine.emit(GameEngine.events.PLAYER_UPDATE, state)
+      }, 100)
+    })
   }
 
   GameApp.prototype.start = function () {
     this.engine.start()
   }
-})();
+})(); // eslint-disable-line semi
