@@ -25,6 +25,7 @@ module.exports = function () {
     app.gameEngine = new GameEngine(game, path.join(BASE_URL, 'dist'))
     app.gameEngine.start()
 
+    app.emit('attach:gameEngine')
     return listen.apply(server, arguments)
   }
 

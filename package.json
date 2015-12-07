@@ -12,7 +12,8 @@
     "start": "NODE_PATH=`pwd` gulp serve",
     "build": "gulp build",
     "prod": "npm run production",
-    "production": "NODE_PATH=`pwd` NODE_ENV=production node index"
+    "production": "NODE_PATH=`pwd` NODE_ENV=production node index",
+    "debug": "NODE_PATH=`pwd` node debug index"
   },
   "repository": {
     "type": "git",

@@ -96,8 +96,11 @@ gulp.task('watch:frontend', () => {
     'app/scripts/**/*.js',
     'app/images/**/*',
     '.tmp/fonts/**/*',
-    '.tmp/scripts/**/*'
-  ]).on('change', reload)
+    '.tmp/scripts/**/*.js'
+  ]).on('change', function () {
+    console.log('FE change -- reload')
+    reload()
+  })
 
   gulp.watch('app/styles/**/*.css', ['styles'])
   gulp.watch('app/fonts/**/*', ['fonts'])

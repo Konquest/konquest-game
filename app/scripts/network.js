@@ -34,6 +34,10 @@
       self.engine.emit(GameEngine.events.NETWORK_DISCONNECT, self.io.id)
     })
 
+    this.io.on(GameEngine.events.SERVER_DISCONNECT, function (reason) {
+      console.warn('Server Disconnect:', reason)
+    })
+
     // TODO authentication
 
     this.engine.on(GameEngine.events.GAME_CREATE, this.onStart.bind(this))
