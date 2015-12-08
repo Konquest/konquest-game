@@ -74,17 +74,16 @@
     }
   }
 
-  GameNetwork.prototype.onPlayerLeave = function (player) {
-    console.log('player left', player)
+  GameNetwork.prototype.onPlayerLeave = function (playerId) {
+    console.log('player left', playerId)
 
     if (!this.gameStarted) {
-      var index = this.prestartPlayers.indexOf(player)
+      var index = this.prestartPlayers.indexOf(playerId)
       if (index > 0) {
         this.prestartPlayers.splice(index, 1)
       }
     } else {
-      this.engine.emit(GameEngine.events.PLAYER_LEAVE, player)
-      this.game.onPlayerLeave.dispatch(player)
+      this.engine.emit(GameEngine.events.PLAYER_LEAVE, playerId)
     }
   }
 

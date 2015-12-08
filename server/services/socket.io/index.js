@@ -77,8 +77,10 @@ module.exports = function (app) {
       })
 
       socket.on('disconnect', function () {
+        clearInterval(socket.interval)
         app.gameEngine.emit(events.NETWORK_DISCONNECT, socket.id)
         app.gameEngine.emit(events.PLAYER_LEAVE, socket.id)
+        server.io.emit(events.PLAYER_LEAVE, socket.id)
         log.info('Socket closed!', socket.id)
       })
 
@@ -88,7 +90,7 @@ module.exports = function (app) {
       // }, 100)   // This should be tuned to high freq user latency
 
       // Full sync
-      setInterval(function () {
+      socket.interval = setInterval(function () {
         socket.emit(events.GAME_SYNC, app.gameEngine.getPlayersFull())
       }, 2000)  // This should be tuned to low freq user latency
     } else {
