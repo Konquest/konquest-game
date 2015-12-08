@@ -85,9 +85,9 @@ module.exports = function (app) {
       })
 
       // // Update play state
-      // setInterval(function () {
-      //   socket.emit(events.PLAYER_SYNC, app.gameEngine.getPlayers())
-      // }, 100)   // This should be tuned to high freq user latency
+      setInterval(function () {
+        socket.emit(events.PLAYER_SYNC, app.gameEngine.getPlayers())
+      }, 100)   // This should be tuned to high freq user latency
 
       // Full sync
       socket.interval = setInterval(function () {
