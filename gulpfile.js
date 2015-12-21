@@ -121,7 +121,7 @@ gulp.task('watch:backend', () => {
   })
 })
 
-gulp.task('serve', ['styles', 'fonts', 'game-engine'], () => {
+gulp.task('serve', ['styles', 'fonts', 'game-engine', 'images'], () => {
   gulp.start(['watch:frontend', 'watch:backend'])
 })
 
